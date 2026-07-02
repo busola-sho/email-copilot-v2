@@ -7,7 +7,7 @@ class EmailIntent(str, Enum): # recall an enum has a name and a value
     UNKNOWN="unknown"
 
 def detect_intent(text:str)->EmailIntent:
-    email_lower=email_body.lower()
+    email_lower=text.lower()
     if "meeting" in email_lower or "reschedule" in email_lower or "calendar" in email_lower:
         return EmailIntent.MEETING
     if "thank" in email_lower or "appreciate" in email_lower:
