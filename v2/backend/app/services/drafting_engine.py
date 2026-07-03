@@ -22,6 +22,6 @@ class LLMDraftingEngine(DraftingEngine):
         return{
             "draft": draft,
             "confidence": 0.6,
-            "intent": "llm_placeholder",
+            "intent": "llm_generated",
             "needs_review": True
         }
