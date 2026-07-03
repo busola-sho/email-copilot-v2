@@ -1,7 +1,3 @@
-import os
-
-os.environ["DRAFTING_ENGINE"] = "rule_based" # Making this file solely for rule_based
-
 from fastapi.testclient import TestClient
 
 from app.main import app
