@@ -1,77 +1,42 @@
-# EmailCopilot Backend
+# EmailCopilot
 
-A FastAPI backend for generating draft email replies with intent detection, confidence scoring, and human-review flags.
+EmailCopilot is a browser-based AI email drafting assistant. It lets a user select or paste email text, generate a draft reply through a FastAPI backend, and copy the response directly from a Chrome extension.
 
-This is a rebuild of an earlier automatic email responder project I created in 2023. The original version combined a Flask backend, PostgreSQL database, React frontend, Celery workers, Outlook email integration, and an early GPT-2 fine-tuning attempt for email response generation.
+This project is a rebuild of an automatic email responder I first created in 2023. The original version explored Flask, React, PostgreSQL, Celery, Outlook integration, and GPT-2 fine-tuning. This version rebuilds the idea with cleaner software engineering practices, a tested backend, Docker support, and a local LLM-powered drafting engine.
 
-That first version helped me explore full-stack ML application development, but the codebase reflected my skill level at the time: the ML component was difficult to integrate cleanly, the system design was tightly coupled, and the project lacked proper testing, evaluation, containerization, and deployment readiness.
+## What it does
 
-EmailCopilot is a deliberate rebuild of that idea with stronger software engineering practices. The current backend starts with a rule-based baseline, then adds a configurable local LLM drafting engine using Ollama.
-
-## Features
-
-- `POST /draft-reply` endpoint
-- Pydantic request/response validation
-- Rule-based intent detection baseline
-- Local Ollama-backed LLM drafting engine
-- Configurable drafting engine via `.env`
-- Confidence score
-- Human-review flag
-- Intent-specific tests
-- Mocked LLM client and engine tests
-- Synthetic evaluation dataset
-- Evaluation report generation
-- Docker and Docker Compose support
+- Chrome extension UI for drafting email replies
+- Auto-loads selected text from the browser into the extension
+- Sends email text to a FastAPI backend
+- Supports both rule-based and Ollama-backed LLM drafting engines
+- Returns draft reply, intent, confidence, and review flag
+- Lets users copy the generated draft
+- Includes tests, Docker setup, and mocked LLM integration tests
 
 ## Architecture
 
 ```text
-email body
-→ FastAPI endpoint
-→ Pydantic validation
-→ drafting engine
-    → rule-based engine OR Ollama LLM engine
-→ draft reply
-→ confidence + review flag
-→ JSON response
+Chrome Extension
+→ FastAPI Backend
+→ Drafting Engine
+    → Rule-based baseline
+    → Ollama local LLM
+→ Draft reply + confidence + review flag
 ```
 
-## Drafting engines
+## Tech stack
 
-The backend currently supports two drafting engines:
+- Python
+- FastAPI
+- Pydantic
+- Pytest
+- Docker / Docker Compose
+- Ollama
+- Chrome Extension Manifest V3
+- JavaScript, HTML, CSS
 
-`rule_based`
-
-A deterministic baseline that detects simple email intents such as meeting, thanks, follow-up, and unknown.
-
-`llm`
-
-A local Ollama-backed drafting engine that generates replies using a local language model.
-
-The active engine is controlled through `.env`.
-
-## Environment setup
-
-Create a local `.env` file in `v2/backend/`.
-
-For the rule-based engine:
-
-```env
-DRAFTING_ENGINE=rule_based
-```
-
-For the Ollama LLM engine:
-
-```env
-DRAFTING_ENGINE=llm
-LLM_PROVIDER=ollama
-MODEL_NAME=llama3.2:3b
-OLLAMA_BASE_URL=http://localhost:11434
-```
-
-Do not commit `.env`. Use `.env.example` for safe example configuration.
-
-## Run locally with Python
+## Run the backend
 
 From `v2/backend`:
 
@@ -80,82 +45,21 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
-Open the API docs:
-
-```text
-http://127.0.0.1:8000/docs
-```
-
-Health check:
-
-```bash
-curl http://127.0.0.1:8000/
-```
-
-Example response:
-
-```json
-{
-  "status": "ok",
-  "drafting_engine": "rule_based"
-}
-```
-
-## Example request
-
-```bash
-curl -X POST "http://127.0.0.1:8000/draft-reply" \
-  -H "Content-Type: application/json" \
-  -d '{"email_body": "Hi, can we reschedule our meeting to Friday afternoon?"}'
-```
-
-Example rule-based response:
-
-```json
-{
-  "draft": "Hi, thanks for your message. That works for me. Please let me know what time suits you best.",
-  "intent": "meeting",
-  "confidence": 0.7,
-  "needs_review": true
-}
-```
-
-Example LLM response:
-
-```json
-{
-  "draft": "Hi, thanks for your message. Friday afternoon works for me. What time did you have in mind?",
-  "intent": "llm_generated",
-  "confidence": 0.6,
-  "needs_review": true
-}
-```
-
-## Run with Docker Compose
-
-From `v2/backend`:
+Or with Docker:
 
 ```bash
 docker compose up --build
 ```
 
-Then call the endpoint:
+## Use Ollama
 
-```bash
-curl -X POST "http://127.0.0.1:8000/draft-reply" \
-  -H "Content-Type: application/json" \
-  -d '{"email_body": "Hi, thank you so much!"}'
-```
-
-## Run with Ollama
-
-Install Ollama and pull a local model:
+Pull a local model:
 
 ```bash
 ollama pull llama3.2:3b
 ```
 
-Make sure Ollama is running locally, then set:
+Create a local `.env` file in `v2/backend`:
 
 ```env
 DRAFTING_ENGINE=llm
@@ -164,95 +68,30 @@ MODEL_NAME=llama3.2:3b
 OLLAMA_BASE_URL=http://localhost:11434
 ```
 
-Start the backend:
-
-```bash
-uvicorn app.main:app --reload
-```
-
-Call the drafting endpoint:
-
-```bash
-curl -X POST "http://127.0.0.1:8000/draft-reply" \
-  -H "Content-Type: application/json" \
-  -d '{"email_body": "Hi, can we reschedule our meeting to Friday afternoon? Also, do you like food?"}'
-```
-
-If the backend is running inside Docker while Ollama is running on your Mac, use this instead:
-
-```env
-OLLAMA_BASE_URL=http://host.docker.internal:11434
-```
-
 ## Run tests
-
-Run tests locally:
 
 ```bash
 pytest
 ```
 
-Run tests inside Docker:
+Or inside Docker:
 
 ```bash
 docker compose run --rm tests
 ```
 
-The normal test suite does not call the real Ollama server. LLM-related tests mock the layer underneath so tests remain fast, stable, and independent of external services.
+## Run the extension
 
-## Manual Ollama integration test
-
-To test the real local Ollama integration:
-
-```bash
-python scripts/test_ollama_integration.py
-```
-
-This script calls the actual local Ollama model and prints the generated draft. It is intentionally separate from the normal pytest suite.
-
-## Run evaluation
-
-Run the intent evaluation script:
-
-```bash
-python scripts/evaluate_intents.py
-```
-
-This writes an evaluation report to:
-
-```text
-reports/intent_eval.json
-```
-
-The current evaluation is intentionally simple. It gives a baseline for checking intent detection behaviour and provides a foundation for comparing drafting engines later.
-
-## Testing strategy
-
-The project separates different kinds of tests:
-
-```text
-API tests
-→ check endpoint behaviour and response schema
-
-Rule-based tests
-→ check deterministic intent detection paths
-
-LLM engine tests
-→ check that the LLM engine returns the expected response shape
-
-LLM client tests
-→ mock Ollama HTTP responses and check response parsing
-
-Manual integration script
-→ calls the real local Ollama model
-```
-
-This keeps normal tests reliable while still allowing real model behaviour to be tested manually.
+1. Open `chrome://extensions`
+2. Turn on Developer mode
+3. Click **Load unpacked**
+4. Select the `extension/` folder
+5. Start the backend
+6. Select email text on a webpage or paste text into the extension
+7. Click **Generate reply**
 
 ## Current status
 
-Backend v1 established a clean, tested, containerized rule-based API.
+EmailCopilot currently supports a polished local MVP: Chrome extension client, FastAPI backend, Dockerized setup, rule-based baseline, Ollama LLM drafting, and mocked tests for reliable development.
 
-Backend v2 adds a configurable LLM drafting engine using local Ollama, while preserving the same API contract.
-
-The project is currently focused on backend architecture, model-serving boundaries, testing, and local deployment. Future work may include a browser extension client, richer evaluation of draft quality, async processing, and cloud deployment.
+Next steps include cloud deployment, better evaluation of draft quality, and richer browser/email-client integration.
