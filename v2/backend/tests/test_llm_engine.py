@@ -1,24 +1,17 @@
-import os
-
-os.environ["DRAFTING_ENGINE"] = "llm" # Making this file solely for llm
+from unittest.mock import patch
 
 from app.services.drafting_engine import LLMDraftingEngine
 
+
 def test_llm_engine_returns_valid_response():
-    engine = LLMDraftingEngine()
+    with patch(
+        "app.services.drafting_engine.LLMClient.generate_llm_reply",
+        return_value="Hi, yes, happy to schedule a meeting soon."
+    ):
+        engine = LLMDraftingEngine()
+        result = engine.generate("Hi, can we schedule a meeting soon?")
 
-    result=engine.generate("Hi, can we schedule a meeting soon?")
-
-    assert "draft" in result
-    assert "intent" in result
-    assert "confidence" in result
-    assert "needs_review" in result
-
-    assert isinstance(result["draft"], str)
-    assert isinstance(result["confidence"], float)
-    assert isinstance(result["intent"], str)
-    assert isinstance(result["needs_review"], bool)
-
+    assert result["draft"] == "Hi, yes, happy to schedule a meeting soon."
     assert result["intent"] == "llm_generated"
+    assert isinstance(result["confidence"], float)
     assert result["needs_review"] is True
-
