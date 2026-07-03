@@ -1,0 +1,12 @@
+{"email_body": "Hi, can we reschedule our meeting to Friday afternoon?", "intent": "meeting", "ideal_reply": "Hi, thanks for your message. Friday afternoon works for me. Please let me know what time suits you best."}
+{"email_body": "Are you available for a quick call tomorrow?", "intent": "meeting", "ideal_reply": "Hi, thanks for reaching out. Tomorrow works for me. Please let me know what time you had in mind."}
+{"email_body": "Could we move our calendar invite to next week?", "intent": "meeting", "ideal_reply": "Hi, thanks for letting me know. Next week works for me. Please send over a time that suits you."}
+{"email_body": "Thank you so much for your help with this.", "intent": "thanks", "ideal_reply": "Hi, you're very welcome. Happy to help."}
+{"email_body": "I really appreciate your support on this project.", "intent": "thanks", "ideal_reply": "Hi, thank you for saying that. I really appreciate it."}
+{"email_body": "Thanks again for reviewing the document.", "intent": "thanks", "ideal_reply": "Hi, you're very welcome. I'm glad I could help."}
+{"email_body": "Just following up on my previous email.", "intent": "follow_up", "ideal_reply": "Hi, thanks for following up. I'll take a look and get back to you shortly."}
+{"email_body": "I wanted to check in on the status of this.", "intent": "follow_up", "ideal_reply": "Hi, thanks for checking in. I'll review the status and get back to you shortly."}
+{"email_body": "Following up to see if you had any updates.", "intent": "follow_up", "ideal_reply": "Hi, thanks for following up. I’ll check and get back to you with an update soon."}
+{"email_body": "Please find the document attached for your review.", "intent": "unknown", "ideal_reply": "Hi, thanks for sending this over. I'll review it and get back to you shortly."}
+{"email_body": "I wanted to share this article with you.", "intent": "unknown", "ideal_reply": "Hi, thanks for sharing this with me. I'll take a look."}
+{"email_body": "Let me know what you think about the proposal.", "intent": "unknown", "ideal_reply": "Hi, thanks for sending this. I'll review the proposal and share my thoughts soon."}

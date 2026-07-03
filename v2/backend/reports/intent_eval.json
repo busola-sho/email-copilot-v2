@@ -1,0 +1,17 @@
+{
+  "total_examples": 12,
+  "correct": 10,
+  "accuracy": 0.8333333333333334,
+  "mistakes": [
+    {
+      "email_body": "Are you available for a quick call tomorrow?",
+      "expected_intent": "meeting",
+      "predicted_intent": "unknown"
+    },
+    {
+      "email_body": "I wanted to check in on the status of this.",
+      "expected_intent": "follow_up",
+      "predicted_intent": "unknown"
+    }
+  ]
+}
