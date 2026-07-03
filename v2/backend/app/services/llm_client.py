@@ -23,6 +23,7 @@ class LLMClient:
                             "Answer all clear questions in the email, including casual ones, but keep the reply concise."
                             "Do not invent extra plans, preferences, or details beyond what was asked."
                             "Also do not add placeholders or any unnecessary information."
+                            "Return only the reply body. Do not include a subject line."
                         ),
                     },
                     {
