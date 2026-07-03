@@ -1,16 +1,28 @@
 from fastapi import FastAPI
 
 from app.schemas import DraftReplyRequest, DraftReplyResponse
-from app.services.draft_service import generate_draft_reply
+from app.services.drafting_engine import RuleBasedDraftingEngine, LLMDraftingEngine
+from app.config import settings
 
 
 app = FastAPI(title="EmailCopilot API")
 
+def get_drafting_engine():
+    if settings.drafting_engine=="rule_based":
+        return RuleBasedDraftingEngine()
+    if settings.drafting_engine=="llm":
+        return LLMDraftingEngine()
+    raise ValueError(f"Unsupported drafting engine: {settings.drafting_engine}")
+
+drafting_engine = get_drafting_engine()
 
 @app.get("/")
 def health_check():
-    return {"status": "ok"}
+    return {
+        "status": "ok",
+        "drafting_engine":settings.drafting_engine
+    }
 
 @app.post("/draft-reply", response_model=DraftReplyResponse)
 def draft_reply(request: DraftReplyRequest):
-    return generate_draft_reply(request.email_body)
+    return drafting_engine.generate(request.email_body)
