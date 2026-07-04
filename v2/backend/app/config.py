@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     llm_provider: str = "ollama"
     model_name: str = "llama3.2:3b"
     ollama_base_url: str = "http://localhost:11434"
-
+    openai_api_key: str | None = None
     model_config = SettingsConfigDict(
         env_file=".env"
     )
