@@ -2,6 +2,8 @@
 
 EmailCopilot is a browser-based AI email drafting assistant. It lets a user select or paste email text, generate a draft reply through a FastAPI backend, and copy the response directly from a Chrome extension.
 
+**Note:** Simply selecting the text gets it in EmailCopilot. All you then have to do is click "generate reply".
+
 ![EmailCopilot Chrome extension demo](docs/emailcopilot-demo.png)
 
 This project is a rebuild of an automatic email responder I first created in 2023: [intelligent-email](https://github.com/Olubusolami-R/email-copilot-v1). The original version explored Flask, React, PostgreSQL, Celery, Outlook integration, and an early GPT-2 fine-tuning attempt for email response generation.
