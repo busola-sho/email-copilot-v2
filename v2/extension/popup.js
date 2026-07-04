@@ -1,4 +1,4 @@
-const API_URL = "https://email-copilotv2.onrender.com/";
+const API_URL = "https://email-copilotv2.onrender.com/draft-reply";
 
 const emailBodyInput = document.getElementById("emailBody");
 const draftReplyInput = document.getElementById("draftReply");
@@ -6,6 +6,8 @@ const generateButton = document.getElementById("generateButton");
 const copyButton = document.getElementById("copyButton");
 const statusText = document.getElementById("status");
 const metadata = document.getElementById("metadata");
+
+console.log("EmailCopilot API_URL:", API_URL);
 
 async function loadSelectedText() {
   try {
