@@ -5,10 +5,11 @@
   "description": "Generate draft email replies using the EmailCopilot backend.",
   "permissions": ["activeTab", "scripting"],
   "host_permissions": [
-    "http://127.0.0.1:8000/*",
-    "http://localhost:8000/*",
-    "<all_urls>"
-  ],
+  "http://127.0.0.1:8000/*",
+  "http://localhost:8000/*",
+  "https://email-copilotv2.onrender.com/*",
+  "<all_urls>"
+],
   "action": {
     "default_popup": "popup.html",
     "default_title": "EmailCopilot"

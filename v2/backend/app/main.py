@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.schemas import DraftReplyRequest, DraftReplyResponse
 from app.services.drafting_engine import RuleBasedDraftingEngine, LLMDraftingEngine
@@ -6,6 +7,13 @@ from app.config import settings
 
 
 app = FastAPI(title="EmailCopilot API")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # okay for MVP; restrict later if needed
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 def get_drafting_engine():
     if settings.drafting_engine=="rule_based":

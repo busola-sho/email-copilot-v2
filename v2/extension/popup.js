@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:8000/draft-reply";
+const API_URL = "https://email-copilotv2.onrender.com/";
 
 const emailBodyInput = document.getElementById("emailBody");
 const draftReplyInput = document.getElementById("draftReply");
